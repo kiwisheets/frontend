@@ -1,0 +1,34 @@
+os:
+  - linux
+dist: focal
+
+language: node_js
+node_js:
+  - node
+
+services:
+  - docker
+
+stages:
+  - test
+  - name: release
+    if: branch = master AND type != pull_request
+
+jobs:
+  include:
+    - stage: release
+      install:
+        - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+      script:
+        - docker build -t frontend .
+        - |
+          if [ -z $TRAVIS_TAG ]
+          then
+            docker tag frontend $DOCKER_NAMESPACE/frontend:master
+            docker push $DOCKER_NAMESPACE/frontend:master
+          else
+            docker tag frontend $DOCKER_NAMESPACE/frontend:latest
+            docker tag frontend $DOCKER_NAMESPACE/frontend:$TRAVIS_TAG
+            docker push $DOCKER_NAMESPACE/frontend:latest
+            docker push $DOCKER_NAMESPACE/frontend:$TRAVIS_TAG
+          fi
