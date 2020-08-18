@@ -15,13 +15,21 @@ const SnackbarAlert = ({
   open, onClose, severity, message, vertical, horizontal,
 }) => {
   const classes = useStyles();
+
+  const snackbarClassname = () => {
+    if (vertical === 'top' && horizontal === 'center') {
+      return classes.snackbarTop;
+    }
+    return '';
+  };
+
   return (
     <Snackbar
       open={open}
       autoHideDuration={6000}
       onClose={onClose}
       anchorOrigin={{ vertical, horizontal }}
-      className={vertical === 'top' && horizontal === 'center' && classes.snackbarTop}
+      className={snackbarClassname()}
     >
       <MuiAlert elevation={6} variant="filled" onClose={onClose} severity={severity}>
         {message}
