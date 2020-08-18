@@ -1,0 +1,9 @@
+mutation LOGIN($email: String! $password: String! $twoFactor: String) {
+  login(email: $email password: $password twoFactor: $twoFactor) {
+    user {
+      email
+    }
+    token
+    twoFactorEnabled
+  }
+}

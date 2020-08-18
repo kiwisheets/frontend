@@ -1,0 +1,12 @@
+query GET_USER($userID: ID) {
+  user(id: $userID) {
+    id
+    email
+    firstname
+    lastname
+    company {
+      name
+      code
+    }
+  }
+}
