@@ -38,7 +38,7 @@ job "frontend" {
 
         tags = [
           "traefik.enable=true",
-          "traefik.http.routers.whoami-http.rule=Host(`app.kiwisheets.com`)",
+          "traefik.http.routers.frontend.rule=Host(`app.kiwisheets.com`)",
         ]
 
         check {
