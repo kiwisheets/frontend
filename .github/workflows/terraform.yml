@@ -19,8 +19,6 @@ on:
 jobs:
   terraform:
     name: "Terraform"
-    needs:
-      - Travis
     runs-on:
       - self-hosted
       - linux
