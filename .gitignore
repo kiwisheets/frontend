@@ -134,3 +134,11 @@ sketch
 .history
 
 # End of https://www.gitignore.io/api/node,react,visualstudiocode
+
+### Terraform ###
+# Local .terraform directories
+**/.terraform/*
+
+# .tfstate files
+*.tfstate
+*.tfstate.*
