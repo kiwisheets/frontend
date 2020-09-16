@@ -74,7 +74,7 @@ jobs:
         run: docker push kiwisheets/frontend:${{ needs.set-var.outputs.docker-tag }}
 
   deploy:
-    name: "Deploy Development"
+    name: "Deploy"
     runs-on:
       - self-hosted
       - linux
