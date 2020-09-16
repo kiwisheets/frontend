@@ -1,4 +1,4 @@
-job "frontend" {
+job "frontend-prod" {
   datacenters = ["hetzner"]
 
   group "frontend" {
@@ -15,13 +15,16 @@ job "frontend" {
       driver = "docker"
 
       config {
-        image = "kiwisheets/frontend:master"
+        image = "kiwisheets/frontend:latest"
         port_map = {
           http = 3000
         }
       }
 
       resources {
+        cpu    = 50
+        memory = 128
+
         network {
           mbits = 10
           port  "http" {}
@@ -29,7 +32,7 @@ job "frontend" {
       }
 
       service {
-        name = "frontend"
+        name = "frontend-prod"
         port = "http"
 
         connect {

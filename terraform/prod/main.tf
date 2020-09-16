@@ -3,7 +3,7 @@ terraform {
     organization = "KiwiSheets"
 
     workspaces {
-      name = "KiwiSheets-Frontend"
+      name = "KiwiSheets-Frontend-Prod"
     }
   }
 }
