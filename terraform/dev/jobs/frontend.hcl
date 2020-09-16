@@ -34,7 +34,7 @@ job "frontend-dev" {
 
         tags = [
           "traefik.enable=true",
-          "traefik.http.routers.frontend.rule=Host(`beta.kiwisheets.com`)",
+          "traefik.http.routers.frontend-dev.rule=Host(`beta.kiwisheets.com`)",
         ]
 
         check {
