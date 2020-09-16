@@ -6,30 +6,81 @@
 # Documentation for `hashicorp/setup-terraform` is located here: https://github.com/hashicorp/setup-terraform
 #
 
-name: "Terraform"
+name: "CI/CD"
 
 on:
   push:
-    branches:
-      - master
   pull_request:
   # schedule:
   #   - cron: "0 0 * * *"
 
 jobs:
-  terraform:
-    name: "Terraform"
+  test:
+    name: "Test"
+    runs-on: ubuntu-20.04
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: npm install
+        run: npm install --silent
+
+      - name: npm test
+        run: npm test
+
+  set-var:
+    name: "Set Variables"
+    if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/develop') && github.event_name == 'push'
+    runs-on: ubuntu-20.04
+
+    outputs:
+      docker-tag: ${{ steps.docker-tag.outputs.value }}
+      terraform-dir: ${{ steps.terraform-dir.outputs.value }}
+
+    steps:
+      - uses: haya14busa/action-cond@v1
+        id: docker-tag
+        with:
+          cond: ${{ github.ref == 'refs/heads/master' }}
+          if_true: "latest"
+          if_false: "develop"
+
+      - uses: haya14busa/action-cond@v1
+        id: terraform-dir
+        with:
+          cond: ${{ github.ref == 'refs/heads/master' }}
+          if_true: "prod"
+          if_false: "dev"
+
+  docker-image:
+    name: "Build Image"
+    runs-on: ubuntu-20.04
+    needs:
+      - test
+      - set-var
+
+    steps:
+      - name: Build
+        run: docker build . -t kiwisheets/frontend:${{ needs.set-var.outputs.docker-tag }}
+
+      - name: Push
+        run: docker push kiwisheets/frontend:${{ needs.set-var.outputs.docker-tag }}
+
+  deploy:
+    name: "Deploy Development"
     runs-on:
       - self-hosted
       - linux
+    needs:
+      - docker-image
+      - set-var
 
-    # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
       run:
         shell: bash
-        working-directory: terraform
+        working-directory: terraform/${{ needs.set-var.outputs.terraform-dir }}
 
-    # Checkout the repository to the GitHub Actions runner
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -39,21 +90,17 @@ jobs:
         env:
           NOMAD_CACERT: ${{ secrets.NOMAD_CACERT }}
 
-      # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
 
-      # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
       - name: Terraform Init
         run: terraform init
 
-      # Checks that all Terraform configuration files adhere to a canonical format
       - name: Terraform Format
         run: terraform fmt -check
 
-      # Generates an execution plan for Terraform
       - name: Terraform Plan
         run: terraform plan -input=false
         env:
@@ -62,10 +109,7 @@ jobs:
           NOMAD_TOKEN: ${{ secrets.NOMAD_TOKEN }}
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}
 
-        # On push to master, build or change infrastructure according to Terraform configuration files
-        # Note: It is recommended to set up a required "strict" status check in your repository for "Terraform Cloud". See the documentation on "strict" required status checks for more information: https://help.github.com/en/github/administering-a-repository/types-of-required-status-checks
       - name: Terraform Apply
-        if: github.ref == 'refs/heads/master' && (github.event_name == 'push' || github.event_name == 'schedule')
         run: terraform apply -input=false -auto-approve
         env:
           TF_VAR_hcloud_token: ${{ secrets.HCLOUD_TOKEN }}
