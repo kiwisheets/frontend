@@ -2,14 +2,7 @@ job "frontend-prod" {
   datacenters = ["hetzner"]
 
   group "frontend" {
-    count = 2
-
-    update {
-      max_parallel      = 1
-      min_healthy_time  = "30s"
-      healthy_deadline  = "5m"
-      progress_deadline = "10m"
-    }
+    count = 1
 
     task "frontend" {
       driver = "docker"
