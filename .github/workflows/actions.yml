@@ -69,6 +69,8 @@ jobs:
 
       - name: Build
         run: docker build -t kiwisheets/frontend:${{ needs.set-var.outputs.docker-tag }} --build-arg REACT_APP_API_URI .
+        env:
+          REACT_APP_API_URI: ${{ secrets.REACT_APP_API_URI }}
 
       - name: Push
         run: docker push kiwisheets/frontend:${{ needs.set-var.outputs.docker-tag }}
