@@ -115,6 +115,7 @@ temp/
 
 node_modules
 client/build/
+build
 
 *.sublime*
 
