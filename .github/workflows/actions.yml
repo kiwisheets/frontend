@@ -102,6 +102,9 @@ jobs:
         env:
           NOMAD_CACERT: ${{ secrets.NOMAD_CACERT }}
 
+      - name: "ENV"
+        uses: rlespinasse/github-slug-action@v2.x
+
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v1
         with:
