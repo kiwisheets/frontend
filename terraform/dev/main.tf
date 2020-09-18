@@ -14,7 +14,7 @@ provider "nomad" {
 
 resource "nomad_job" "frontend" {
   jobspec = templatefile("${path.module}/jobs/frontend.hcl", {
-    version = var.version
+    version = var.image_version
   })
   detach = false
 }
