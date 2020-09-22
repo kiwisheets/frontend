@@ -28,28 +28,31 @@ const httpLink = createHttpLink({
   credentials: 'same-origin',
 });
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.map(({ message, locations, path }) => console.error(
-      `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-    ));
-  }
+// const errorLink = onError(({ graphQLErrors, networkError }) => {
+//   if (graphQLErrors) {
+//     graphQLErrors.map(({ message, locations, path }) => console.error(
+//       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+//     ));
+//   }
 
-  if (networkError) console.error(`[Network error]: ${networkError}`);
-});
+//   if (networkError) console.error(`[Network error]: ${networkError}`);
+// });
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: from([
     createPersistedQueryLink({
       // generateHash: ({ documentId }) => documentId,
-      useGETForHashedQueries: false,
+      useGETForHashedQueries: true,
     }),
-    errorLink,
+    // errorLink,
     authMiddleware,
     httpLink,
   ]),
   defaultOptions: {
+    watchQuery: {
+      errorPolicy: 'all',
+    },
     mutate: {
       errorPolicy: 'all',
     },

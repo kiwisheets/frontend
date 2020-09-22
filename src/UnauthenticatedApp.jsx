@@ -150,6 +150,7 @@ const UnauthenticatedApp = (props) => {
         autoFocus
         label="Email"
         variant="filled"
+        type="email"
         className={classes.formField}
         disabled={loginLoading || success}
         onChange={(e) => setEmail(e.target.value)}

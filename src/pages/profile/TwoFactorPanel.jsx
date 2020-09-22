@@ -67,7 +67,7 @@ const TwoFactorPanel = (props) => {
     loading: twoFactorLoading,
     refetch: twoFactorRefetch,
   } = useQuery(TWO_FACTOR_ENABLED, {
-    fetchPolicy: 'network-only',
+    // fetchPolicy: 'network-only',
   });
 
   const [enableTwoFactor, {
