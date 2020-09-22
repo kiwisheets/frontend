@@ -8,7 +8,7 @@ job "frontend-dev" {
       driver = "docker"
 
       config {
-        image = "kiwisheets/frontend:develop"
+        image = "kiwisheets/frontend:develop-${version}"
         port_map = {
           http = 3000
         }
