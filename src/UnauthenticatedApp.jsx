@@ -93,7 +93,7 @@ const UnauthenticatedApp = (props) => {
     loading: loginLoading, client,
   }] = useMutation(LOGIN, {
     fetchPolicy: 'no-cache',
-    errorPolicy: 'none',
+    errorPolicy: 'ignore',
     onCompleted: useCallback(({ login }) => {
       if (login.twoFactorEnabled && !login.token) {
         setTwoFactorEnabledOpen(true);
