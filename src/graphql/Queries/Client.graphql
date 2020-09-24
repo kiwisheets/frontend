@@ -1,0 +1,10 @@
+query CLIENT {
+  client(id: "vPDL7GLpg9") {
+    id
+    name
+    contacts {
+      firstname
+      email
+    }
+  }
+}
