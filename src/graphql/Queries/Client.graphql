@@ -1,10 +1,11 @@
-query CLIENT {
-  client(id: "vPDL7GLpg9") {
+query CLIENT($id: ID!) {
+  client(id: $id) {
     id
     name
-    contacts {
-      firstname
-      email
-    }
+    website
+    vatNumber
+    businessNumber
+    phone
+    createdAt
   }
 }

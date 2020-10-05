@@ -1,11 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import { Link as RouterLink, Redirect } from 'react-router-dom';
 import {
   Checkbox,
   Fade,
   FormControlLabel,
   IconButton,
   lighten,
+  Link,
   makeStyles,
   Paper,
   Switch,
@@ -22,7 +24,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import DeleteIcon from '@material-ui/icons/Delete';
-import FilterListIcon from '@material-ui/icons/FilterList';
+import AddIcon from '@material-ui/icons/Add';
 import clsx from 'clsx';
 import { useQuery } from '@apollo/client';
 import { CLIENTS_LIST } from 'graphql/Queries';
@@ -103,11 +105,21 @@ const TableToolbar = (props) => {
           </IconButton>
         </Tooltip>
       ) : (
-        <Tooltip title="Filter list">
-          <IconButton aria-label="filter list">
-            <FilterListIcon />
-          </IconButton>
-        </Tooltip>
+        <>
+          {/* <Tooltip title="Filter list">
+            <IconButton aria-label="filter list">
+              <FilterListIcon />
+            </IconButton>
+          </Tooltip> */}
+
+          <Link component={RouterLink} to="clients/create">
+            <Tooltip title="Create new">
+              <IconButton aria-label="create new">
+                <AddIcon />
+              </IconButton>
+            </Tooltip>
+          </Link>
+        </>
       )}
     </Toolbar>
   );
@@ -119,9 +131,9 @@ TableToolbar.propTypes = {
 };
 
 const headCells = [
-  {
-    id: 'id', numeric: false, disablePadding: false, label: 'ID',
-  },
+  // {
+  //   id: 'id', numeric: false, disablePadding: false, label: 'ID',
+  // },
   {
     id: 'name', numeric: false, disablePadding: true, label: 'Name',
   },
@@ -141,7 +153,7 @@ const useTableHeadStyles = makeStyles(() => ({
   },
 }));
 
-function EnhancedTableHead(props) {
+const EnhancedTableHead = (props) => {
   const {
     onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort,
   } = props;
@@ -186,7 +198,7 @@ function EnhancedTableHead(props) {
       </TableRow>
     </TableHead>
   );
-}
+};
 
 EnhancedTableHead.propTypes = {
   numSelected: PropTypes.number.isRequired,
@@ -196,56 +208,6 @@ EnhancedTableHead.propTypes = {
   orderBy: PropTypes.string.isRequired,
   rowCount: PropTypes.number.isRequired,
 };
-
-// const rows = [
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-//   { id: 'some id', name: 'Client name' },
-// ];
 
 const ClientsDashboard = () => {
   const [order, setOrder] = React.useState('asc');
@@ -272,14 +234,14 @@ const ClientsDashboard = () => {
 
   const handleSelectAllClick = (event) => {
     if (event.target.checked) {
-      const newSelecteds = rows.map((n) => n.name);
+      const newSelecteds = rows.map((n) => n.id);
       setSelected(newSelecteds);
       return;
     }
     setSelected([]);
   };
 
-  const handleClick = (event, name) => {
+  const handleSelect = (event, name) => {
     const selectedIndex = selected.indexOf(name);
     let newSelected = [];
 
@@ -318,7 +280,7 @@ const ClientsDashboard = () => {
 
   return (
     <Fade in>
-      <React.Fragment>
+      <>
         <Paper>
           <TableToolbar numSelected={selected.length} title="Clients" />
           <TableContainer>
@@ -331,7 +293,7 @@ const ClientsDashboard = () => {
                 orderBy={orderBy}
                 onSelectAllClick={handleSelectAllClick}
                 onRequestSort={handleRequestSort}
-                rowCount={rows}
+                rowCount={rows.length}
               />
               <TableBody>
                 {stableSort(rows, getComparator(order, orderBy))
@@ -341,24 +303,47 @@ const ClientsDashboard = () => {
                     const labelId = `table-checkbox-${index}`;
 
                     return (
-                      <TableRow
-                        hover
-                        onClick={(event) => handleClick(event, row.id)}
-                        role="checkbox"
-                        tabIndex={-1}
+                      <Link
+                        component={TableRow}
+                        to={`client/${row.id}`}
                         key={row.id}
                         selected={isItemSelected}
+                        tabIndex={-1}
+                        hover
                       >
+                        {/* <TableRow
+                          hover
+                          tabIndex={-1}
+                          key={row.id}
+                          selected={isItemSelected}
+                        > */}
                         <TableCell padding="checkbox">
                           <Checkbox
                             checked={isItemSelected}
+                            onClick={(event) => handleSelect(event, row.id)}
                           />
                         </TableCell>
+                        {/*
                         <TableCell component="th" id={labelId} scope="row" padding="none">
-                          {row.id}
+                          <Link
+                            key={row.id}
+                            to={`client/${row.id}`}
+                            component={RouterLink}
+                          >
+                            {row.id}
+                          </Link>
+                        </TableCell> */}
+                        <TableCell id={labelId} scope="row">
+                          <Link
+                            key={row.id}
+                            to={`client/${row.id}`}
+                            component={RouterLink}
+                          >
+                            {row.name}
+                          </Link>
                         </TableCell>
-                        <TableCell>{row.name}</TableCell>
-                      </TableRow>
+                        {/* </TableRow> */}
+                      </Link>
                     );
                   })}
                 {emptyRows > 0 && (
@@ -385,7 +370,7 @@ const ClientsDashboard = () => {
           control={<Switch checked={dense} onChange={handleChangeDense} />}
           label="Dense padding"
         />
-      </React.Fragment>
+      </>
     </Fade>
   );
 };
