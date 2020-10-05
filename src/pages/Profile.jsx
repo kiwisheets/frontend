@@ -1,6 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
 import React, { useMemo, useState } from 'react';
 import {
   Accordion,
@@ -59,7 +56,9 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center',
   },
   helper: {
-    borderLeft: `2px solid ${theme.palette.divider}`,
+    borderLeftWidth: '2px',
+    borderLeftStyle: 'solid',
+    borderLeftColor: theme.palette.divider,
     padding: theme.spacing(1, 2),
   },
   buttonWrapper: {
@@ -145,7 +144,7 @@ const ChangePasswordPanel = () => {
   const textErrorConfirm = () => (textErrorConfirmLabel() !== ' ');
 
   return (
-    <React.Fragment>
+    <>
       <AccordionDetails>
         <Grid container spacing={1}>
           <Grid item sm={4}>
@@ -215,7 +214,7 @@ const ChangePasswordPanel = () => {
         vertical="top"
         horizontal="center"
       />
-    </React.Fragment>
+    </>
   );
 };
 
@@ -265,7 +264,7 @@ const ProfilePage = () => {
             {personalLoading ? <FullPanelSpinner />
               : (
                 <form className={classes.personalRoot} noValidate autoComplete="off">
-                  <TextField label="Username (Login)" variant="outlined" disabled defaultValue={personalData.me.username} />
+                  <TextField label="Username (Login)" variant="outlined" disabled defaultValue={personalData.me.email} />
                   <TextField label="First name" variant="outlined" defaultValue={personalData.me.firstname} />
                   <TextField label="Last name" variant="outlined" defaultValue={personalData.me.lastname} />
                 </form>

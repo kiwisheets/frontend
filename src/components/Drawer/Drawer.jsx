@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
-import { createContext } from 'react';
+import React, { createContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   Drawer, SwipeableDrawer, Hidden, useTheme, makeStyles,

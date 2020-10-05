@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { jsx } from '@emotion/core';
 import {
   Checkbox,
   Fade,

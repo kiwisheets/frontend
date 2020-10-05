@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
-import { useContext } from 'react';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
 import {
   ListItem,

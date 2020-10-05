@@ -1,6 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
 import React, { useState, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
@@ -26,6 +23,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100vw',
+    height: '100vh',
   },
   form: {
     '& > *': {
@@ -140,11 +145,10 @@ const UnauthenticatedApp = (props) => {
         twoFactor,
       },
     });
-    // }
   };
 
   const LoginFormContents = (
-    <React.Fragment>
+    <>
       <TextField
         required
         autoFocus
@@ -185,19 +189,12 @@ const UnauthenticatedApp = (props) => {
         </Button>
         {loginLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
       </div>
-    </React.Fragment>
+    </>
   );
 
   return (
     <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        height: '100vh',
-      }}
+      className={classes.wrapper}
     >
       <Fade in={!success} onExited={handleLoginExited}>
         <Paper className={classes.root} elevation={5}>
