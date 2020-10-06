@@ -98,7 +98,7 @@ const UnauthenticatedApp = (props) => {
     loading: loginLoading, client,
   }] = useMutation(LOGIN, {
     fetchPolicy: 'no-cache',
-    errorPolicy: 'ignore',
+    errorPolicy: 'none',
     onCompleted: useCallback(({ login }) => {
       if (login.twoFactorEnabled && !login.token) {
         setTwoFactorEnabledOpen(true);
@@ -109,10 +109,10 @@ const UnauthenticatedApp = (props) => {
         onLogin();
       }
     }, [onLogin]),
-    onError: useCallback((e) => {
+    onError: (e) => {
       setErrorMessage(e.message);
       setIncorrectOpen(true);
-    }, []),
+    },
   });
 
   const handleLoginExited = () => {

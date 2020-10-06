@@ -1,7 +1,7 @@
 import {
   ApolloClient, ApolloLink, InMemoryCache, from, createHttpLink,
 } from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
+// import { onError } from '@apollo/client/link/error';
 import { createPersistedQueryLink } from '@apollo/link-persisted-queries';
 
 import { IS_LOGGED_IN } from 'graphql/Queries';
