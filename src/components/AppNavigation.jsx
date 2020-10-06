@@ -38,6 +38,8 @@ import {
   Drawer, DrawerList, DrawerListItem, DrawerNestedList,
 } from './Drawer';
 
+const calculateInputLeftPadding = (theme) => `calc(1em + ${theme.spacing(4)}px)`;
+
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -66,6 +68,9 @@ const useStyles = makeStyles((theme) => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing(0),
+    },
   },
 
   // AppBar Title
@@ -112,7 +117,7 @@ const useStyles = makeStyles((theme) => ({
   },
   inputInput: {
     padding: theme.spacing(1, 1, 1, 0),
-    paddingLeft: `calc(1em + ${theme.spacing(4)}px)`,
+    paddingLeft: calculateInputLeftPadding(theme),
   },
   inputRootFocused: {
     transition: theme.transitions.create('width'),
@@ -153,7 +158,6 @@ function AppNavigation(props) {
 
   // TODO: Handle error and loading
   const { data } = useQuery(ME, {
-    pollInterval: 60000,
     errorPolicy: 'none',
     fetchPolicy: 'cache-first',
   });

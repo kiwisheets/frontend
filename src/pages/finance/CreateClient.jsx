@@ -90,125 +90,123 @@ const CreateClient = () => {
 
   return (
     <Fade in>
-      <>
-        <Card>
-          <CardHeader
-            title="Create Client"
-            titleTypographyProps={{ variant: 'h6' }}
-            subheader="Client/Business Details"
-          />
-          <Divider />
-          <FormContext.Provider value={{ loading, disabled: false }}>
-            <form onSubmit={handleSubmit}>
-              <CardContent>
-                <FormRow>
-                  <FormCol width={12}>
-                    <FormTextField
-                      context={FormContext}
-                      label="Client Name"
-                      onChange={setName}
-                      required
-                      value={name}
-                    />
-                  </FormCol>
-                  <FormCol width={6}>
-                    <FormTextField
-                      context={FormContext}
-                      label="VAT(GST) Number"
-                      onChange={setVatNumber}
-                      value={vatNumber}
-                    />
-                  </FormCol>
-                  <FormCol width={6}>
-                    <FormTextField
-                      context={FormContext}
-                      label="Business Number"
-                      onChange={setBusinessNumber}
-                      value={businessNumber}
-                    />
-                  </FormCol>
-                  <FormCol width={6}>
-                    <FormTextField
-                      context={FormContext}
-                      label="Phone Number"
-                      onChange={setPhoneNumber}
-                      value={phone}
-                    />
-                  </FormCol>
-                  <FormCol width={6}>
-                    <FormTextField
-                      context={FormContext}
-                      label="Website"
-                      onChange={setWebsite}
-                      value={website}
-                    />
-                  </FormCol>
-                </FormRow>
-                <FormRow>
-                  <FormCol width={expandBillingAddress ? 12 : 6}>
+      <Card>
+        <CardHeader
+          title="Create Client"
+          titleTypographyProps={{ variant: 'h6' }}
+          subheader="Client/Business Details"
+        />
+        <Divider />
+        <FormContext.Provider value={{ loading, disabled: false }}>
+          <form onSubmit={handleSubmit}>
+            <CardContent>
+              <FormRow>
+                <FormCol width={12}>
+                  <FormTextField
+                    context={FormContext}
+                    label="Client Name"
+                    onChange={setName}
+                    required
+                    value={name}
+                  />
+                </FormCol>
+                <FormCol width={6}>
+                  <FormTextField
+                    context={FormContext}
+                    label="VAT(GST) Number"
+                    onChange={setVatNumber}
+                    value={vatNumber}
+                  />
+                </FormCol>
+                <FormCol width={6}>
+                  <FormTextField
+                    context={FormContext}
+                    label="Business Number"
+                    onChange={setBusinessNumber}
+                    value={businessNumber}
+                  />
+                </FormCol>
+                <FormCol width={6}>
+                  <FormTextField
+                    context={FormContext}
+                    label="Phone Number"
+                    onChange={setPhoneNumber}
+                    value={phone}
+                  />
+                </FormCol>
+                <FormCol width={6}>
+                  <FormTextField
+                    context={FormContext}
+                    label="Website"
+                    onChange={setWebsite}
+                    value={website}
+                  />
+                </FormCol>
+              </FormRow>
+              <FormRow>
+                <FormCol width={expandBillingAddress ? 12 : 6}>
+                  <FormRow>
+                    <FormCol width={12}>
+                      <Typography variant="subtitle1">Billing Address</Typography>
+                    </FormCol>
+                  </FormRow>
+                  <AddressForm context={FormContext} onChange={setBillingAddress} />
+                </FormCol>
+                {true && (
+                <FormCol width={6}>
+                  <Collapse
+                    in={!shippingSameAsBilling}
+                    unmountOnExit
+                    onExited={() => setExpandBillingAddress(true)}
+                    onEnter={() => setExpandBillingAddress(false)}
+                  >
                     <FormRow>
                       <FormCol width={12}>
-                        <Typography variant="subtitle1">Billing Address</Typography>
+                        <Typography variant="subtitle1">Shipping Address</Typography>
                       </FormCol>
                     </FormRow>
-                    <AddressForm context={FormContext} onChange={setBillingAddress} />
-                  </FormCol>
-                  {true && (
-                    <FormCol width={6}>
-                      <Collapse
-                        in={!shippingSameAsBilling}
-                        unmountOnExit
-                        onExited={() => setExpandBillingAddress(true)}
-                        onEnter={() => setExpandBillingAddress(false)}
-                      >
-                        <FormRow>
-                          <FormCol width={12}>
-                            <Typography variant="subtitle1">Shipping Address</Typography>
-                          </FormCol>
-                        </FormRow>
-                        <AddressForm context={FormContext} onChange={setShippingAddress} />
-                      </Collapse>
-                    </FormCol>
-                  )}
-                </FormRow>
-                <FormRow>
-                  <FormCol width={12}>
-                    <FormControlLabel
-                      control={(
-                        <Switch
-                          checked={shippingSameAsBilling}
-                          onChange={(e) => setShippingSameAsBilling(e.target.checked)}
-                          name="shippingSameAsBilling"
-                          color="primary"
-                        />
+                    <AddressForm context={FormContext} onChange={setShippingAddress} />
+                  </Collapse>
+                </FormCol>
+                )}
+              </FormRow>
+              <FormRow>
+                <FormCol width={12}>
+                  <FormControlLabel
+                    control={(
+                      <Switch
+                        checked={shippingSameAsBilling}
+                        onChange={(e) => setShippingSameAsBilling(e.target.checked)}
+                        name="shippingSameAsBilling"
+                        color="primary"
+                      />
                       )}
-                      label="Shipping Address Same as Billing"
-                    />
-                  </FormCol>
-                </FormRow>
-              </CardContent>
-              <Divider />
-              <CardActions>
-                <div className={classes.actionButtonWrapper}>
-                  <Button size="medium" color="primary" onClick={() => history.goBack()}>
-                    Back
-                  </Button>
-                </div>
-                {/* <div className={classes.actionButtonWrapper}>
+                    label="Shipping Address Same as Billing"
+                  />
+                </FormCol>
+              </FormRow>
+            </CardContent>
+            <Divider />
+            <CardActions>
+              <div className={classes.actionButtonWrapper}>
+                <Button size="medium" color="primary" onClick={() => history.goBack()}>
+                  Back
+                </Button>
+              </div>
+              {/* <div className={classes.actionButtonWrapper}>
                   <Button size="medium" color="primary" type="submit">
                     Submit
                   </Button>
                 </div> */}
-                <FormSubmitButton
-                  context={FormContext}
-                >
-                  Create
-                </FormSubmitButton>
-              </CardActions>
-            </form>
-          </FormContext.Provider>
-        </Card>
-      </>
+              <FormSubmitButton
+                context={FormContext}
+              >
+                Create
+              </FormSubmitButton>
+            </CardActions>
+          </form>
+        </FormContext.Provider>
+      </Card>
     </Fade>
   );
 };

@@ -63,7 +63,7 @@ const AuthenticatedApp = (props) => {
       <Fade in>
         <>
           <AppNavigation onLogout={onLogout}>
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" disableGutters>
               <React.Suspense fallback={<FullPanelSpinner />}>
                 <ErrorBoundary FallbackComponent={ErrorFallback}>
                   <Switch>
