@@ -9,6 +9,9 @@ import ReactDOM from 'react-dom';
 import { ApolloProvider } from '@apollo/client';
 import { ThemeProvider } from '@material-ui/core';
 import CssBaseline from '@material-ui/core/CssBaseline';
+
+import 'mapbox-gl/dist/mapbox-gl.css';
+
 import 'typeface-roboto';
 
 import client from 'utils/ApolloClient';

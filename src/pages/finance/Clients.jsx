@@ -1,16 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Link as RouterLink, Redirect } from 'react-router-dom';
+import { Link as RouterLink } from 'react-router-dom';
 import {
   Checkbox,
   Fade,
-  FormControlLabel,
   IconButton,
   lighten,
   Link,
   makeStyles,
   Paper,
-  Switch,
   Table,
   TableBody,
   TableCell,
@@ -93,7 +91,7 @@ const TableToolbar = (props) => {
           selected
         </Typography>
       ) : (
-        <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
+        <Typography className={classes.title} variant="h5" id="tableTitle" component="div">
           {title}
         </Typography>
       )}
@@ -214,7 +212,6 @@ const ClientsDashboard = () => {
   const [orderBy, setOrderBy] = React.useState('name');
   const [selected, setSelected] = React.useState([]);
   const [page, setPage] = React.useState(0);
-  const [dense, setDense] = React.useState(false);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
 
   const { loading, data } = useQuery(CLIENTS_LIST, {
@@ -270,10 +267,6 @@ const ClientsDashboard = () => {
     setPage(newPage);
   };
 
-  const handleChangeDense = (event) => {
-    setDense(event.target.checked);
-  };
-
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -284,7 +277,7 @@ const ClientsDashboard = () => {
         <TableToolbar numSelected={selected.length} title="Clients" />
         <TableContainer>
           <Table
-            size={dense ? 'small' : 'medium'}
+            size="medium"
           >
             <EnhancedTableHead
               numSelected={selected.length}
@@ -346,7 +339,7 @@ const ClientsDashboard = () => {
                   );
                 })}
               {emptyRows > 0 && (
-              <TableRow style={{ height: (dense ? 33 : 53) * emptyRows }}>
+              <TableRow style={{ height: (53) * emptyRows }}>
                 <TableCell colSpan={6}>
                   { loading && <FullPanelSpinner />}
                 </TableCell>

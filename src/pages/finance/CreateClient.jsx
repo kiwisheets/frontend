@@ -93,7 +93,6 @@ const CreateClient = () => {
       <Card>
         <CardHeader
           title="Create Client"
-          titleTypographyProps={{ variant: 'h6' }}
           subheader="Client/Business Details"
         />
         <Divider />
