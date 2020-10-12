@@ -6,9 +6,10 @@ import ClientComponent from 'components/Client';
 
 const Client = () => {
   const { id } = useParams();
+
   return (
     <Fade in>
-      <ClientComponent id={id} />
+      <ClientComponent edit id={id} />
     </Fade>
   );
 };
