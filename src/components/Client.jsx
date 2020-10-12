@@ -5,7 +5,15 @@ import {
 import { useMutation, useQuery } from '@apollo/client';
 import {
   Button,
-  Card, CardContent, CardHeader, Divider, Fade, IconButton, makeStyles, Typography,
+  Card,
+  CardContent,
+  CardHeader,
+  CircularProgress,
+  Divider,
+  Fade,
+  IconButton,
+  makeStyles,
+  Typography,
 } from '@material-ui/core';
 import EditIcon from '@material-ui/icons/Edit';
 import MoreIcon from '@material-ui/icons/MoreVert';
@@ -126,6 +134,18 @@ const useStyles = makeStyles((theme) => ({
   textAction: {
     margin: theme.spacing(1),
   },
+  buttonWrapper: {
+    // margin: theme.spacing(1),
+    position: 'relative',
+    display: 'inline',
+  },
+  buttonProgress: {
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    marginTop: -12,
+    marginLeft: -12,
+  },
 }));
 
 const Client = (props) => {
@@ -154,8 +174,10 @@ const Client = (props) => {
   }] = useMutation(UPDATE_CLIENT);
 
   useEffect(() => {
-    refetch();
-    setModifying(false);
+    if (updateData != null) {
+      refetch();
+      setModifying(false);
+    }
   }, [updateData, refetch]);
 
   const title = () => {
@@ -197,14 +219,18 @@ const Client = (props) => {
           >
             Discard
           </Button>
-          <Button
-            className={classes.textAction}
-            variant="contained"
-            color="primary"
-            onClick={updateClient}
-          >
-            Save
-          </Button>
+          <div className={classes.buttonWrapper}>
+            <Button
+              className={classes.textAction}
+              variant="contained"
+              color="primary"
+              onClick={updateClient}
+              disabled={updateLoading}
+            >
+              Save
+            </Button>
+            {updateLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
+          </div>
         </>
       );
     }

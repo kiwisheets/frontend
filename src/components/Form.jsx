@@ -197,7 +197,7 @@ const useFormSubmitButtonStyles = makeStyles((theme) => ({
 }));
 
 const FormSubmitButton = (props) => {
-  const { context, children } = props;
+  const { context, children, variant } = props;
   const { loading, disabled } = useContext(context);
 
   const classes = useFormSubmitButtonStyles();
@@ -205,7 +205,7 @@ const FormSubmitButton = (props) => {
   return (
     <div className={classes.buttonWrapper}>
       <Button
-        variant="text"
+        variant={variant}
         color="primary"
         size="medium"
         type="submit"
@@ -224,6 +224,15 @@ FormSubmitButton.propTypes = {
     loading: PropTypes.bool,
     disabled: PropTypes.bool,
   }).isRequired,
+  variant: PropTypes.oneOf([
+    'text',
+    'contained',
+    'outlined',
+  ]),
+};
+
+FormSubmitButton.defaultProps = {
+  variant: 'text',
 };
 
 const useFormRowStyles = makeStyles((theme) => ({
