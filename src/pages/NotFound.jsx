@@ -1,6 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
+import React from 'react';
 import Proptypes from 'prop-types';
 import { Link as RouterLink } from 'react-router-dom';
 import {
@@ -10,6 +8,12 @@ import {
 const useStyles = makeStyles(() => ({
   root: {
     minWidth: 175,
+  },
+  wrapper: {
+    height: '100%',
+    display: 'grid',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   title: {
     fontSize: 14,
@@ -24,12 +28,7 @@ const NotFoundPage = () => {
   return (
     <Fade in>
       <div
-        css={{
-          height: '100%',
-          display: 'grid',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
+        className={classes.wrapper}
       >
         <Card className={classes.root}>
           <CardContent>

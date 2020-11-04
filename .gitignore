@@ -115,6 +115,7 @@ temp/
 
 node_modules
 client/build/
+build
 
 *.sublime*
 
@@ -142,3 +143,5 @@ sketch
 # .tfstate files
 *.tfstate
 *.tfstate.*
+
+.vercel

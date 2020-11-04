@@ -1,6 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
+import React from 'react';
 import Proptypes from 'prop-types';
 import { Snackbar, makeStyles } from '@material-ui/core';
 import { Alert as MuiAlert } from '@material-ui/lab';

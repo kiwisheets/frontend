@@ -1,7 +1,7 @@
 import {
-  ApolloClient, ApolloLink, InMemoryCache, from, createHttpLink,
+  ApolloClient, ApolloLink, InMemoryCache, from, HttpLink,
 } from '@apollo/client';
-import { onError } from '@apollo/client/link/error';
+// import { onError } from '@apollo/client/link/error';
 import { createPersistedQueryLink } from '@apollo/link-persisted-queries';
 
 import { IS_LOGGED_IN } from 'graphql/Queries';
@@ -15,7 +15,7 @@ const authMiddleware = new ApolloLink((operation, forward) => {
       headers: {
         ...headers,
         Authorization: token ? `Bearer ${token}` : '',
-        'client-name': 'Timesheet [web]',
+        'client-name': 'Kiwisheets [web]',
         'client-version': '0.0.1',
       },
     };
@@ -23,33 +23,36 @@ const authMiddleware = new ApolloLink((operation, forward) => {
   return forward(operation);
 });
 
-const httpLink = createHttpLink({
-  uri: process.env.REACT_APP_API_URI,
-  credentials: 'same-origin',
+const httpLink = new HttpLink({
+  uri: (process.env.REACT_APP_BASE_DOMAIN || '') + process.env.REACT_APP_API_URI,
+  credentials: 'include',
 });
 
-const errorLink = onError(({ graphQLErrors, networkError }) => {
-  if (graphQLErrors) {
-    graphQLErrors.map(({ message, locations, path }) => console.error(
-      `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
-    ));
-  }
+// const errorLink = onError(({ graphQLErrors, networkError }) => {
+//   if (graphQLErrors) {
+//     graphQLErrors.map(({ message, locations, path }) => console.error(
+//       `[GraphQL error]: Message: ${message}, Location: ${locations}, Path: ${path}`,
+//     ));
+//   }
 
-  if (networkError) console.error(`[Network error]: ${networkError}`);
-});
+//   if (networkError) console.error(`[Network error]: ${networkError}`);
+// });
 
 const client = new ApolloClient({
   cache: new InMemoryCache(),
   link: from([
     createPersistedQueryLink({
       // generateHash: ({ documentId }) => documentId,
-      useGETForHashedQueries: false,
+      useGETForHashedQueries: true,
     }),
-    errorLink,
+    // errorLink,
     authMiddleware,
     httpLink,
   ]),
   defaultOptions: {
+    watchQuery: {
+      errorPolicy: 'all',
+    },
     mutate: {
       errorPolicy: 'all',
     },
@@ -72,6 +75,8 @@ const writeInitialData = () => {
 };
 
 writeInitialData();
+
+console.log((process.env.REACT_APP_BASE_DOMAIN || '') + process.env.REACT_APP_API_URI);
 
 client.onResetStore(writeInitialData);
 client.onClearStore(writeInitialData);

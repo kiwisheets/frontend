@@ -9,6 +9,13 @@ const theme = createMuiTheme({
     secondary: orange,
     error: red,
   },
+  overrides: {
+    MuiCardActions: {
+      root: {
+        justifyContent: 'center',
+      },
+    },
+  },
 });
 
 export default theme;

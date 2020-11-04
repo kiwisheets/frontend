@@ -1,7 +1,4 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
-import React, { useState, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { makeStyles } from '@material-ui/core/styles';
 import { amber, green, red } from '@material-ui/core/colors';
@@ -26,6 +23,14 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  wrapper: {
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+    justifyContent: 'center',
+    width: '100vw',
+    height: '100vh',
   },
   form: {
     '& > *': {
@@ -89,12 +94,20 @@ const UnauthenticatedApp = (props) => {
   const [success, setSuccess] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
 
+  const twoFactorRef = useRef(null);
+
   const [loginMutation, {
-    loading: loginLoading, client,
+    loading: loginLoading, client, error, data,
   }] = useMutation(LOGIN, {
     fetchPolicy: 'no-cache',
-    errorPolicy: 'none',
-    onCompleted: useCallback(({ login }) => {
+  });
+
+  useEffect(() => {
+    if (error && error.message && !data) {
+      setErrorMessage(error.message);
+      setIncorrectOpen(true);
+    } else if (data) {
+      const { login } = data;
       if (login.twoFactorEnabled && !login.token) {
         setTwoFactorEnabledOpen(true);
         setTwoFactorEnabled(true);
@@ -103,12 +116,8 @@ const UnauthenticatedApp = (props) => {
         localStorage.setItem(localStorageKey, login.token);
         onLogin();
       }
-    }, [onLogin]),
-    onError: useCallback((e) => {
-      setErrorMessage(e.message);
-      setIncorrectOpen(true);
-    }, []),
-  });
+    }
+  }, [error, data, onLogin]);
 
   const handleLoginExited = () => {
     client.writeQuery({
@@ -140,16 +149,16 @@ const UnauthenticatedApp = (props) => {
         twoFactor,
       },
     });
-    // }
   };
 
   const LoginFormContents = (
-    <React.Fragment>
+    <>
       <TextField
         required
         autoFocus
         label="Email"
         variant="filled"
+        type="email"
         className={classes.formField}
         disabled={loginLoading || success}
         onChange={(e) => setEmail(e.target.value)}
@@ -163,10 +172,15 @@ const UnauthenticatedApp = (props) => {
         disabled={loginLoading || success}
         onChange={(e) => setPassword(e.target.value)}
       />
-      <Collapse in={twoFactorEnabled} className={classes.formField}>
+      <Collapse
+        in={twoFactorEnabled}
+        className={classes.formField}
+        onEntered={() => { twoFactorRef.current.focus(); }}
+      >
         <TextField
           label="2FA code"
           variant="filled"
+          inputRef={twoFactorRef}
           className={classes.formFieldCollapseInner}
           required={twoFactorEnabled}
           disabled={!twoFactorEnabled || loginLoading || success}
@@ -184,19 +198,12 @@ const UnauthenticatedApp = (props) => {
         </Button>
         {loginLoading && <CircularProgress size={24} className={classes.buttonProgress} />}
       </div>
-    </React.Fragment>
+    </>
   );
 
   return (
     <div
-      css={{
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
-        width: '100%',
-        height: '100vh',
-      }}
+      className={classes.wrapper}
     >
       <Fade in={!success} onExited={handleLoginExited}>
         <Paper className={classes.root} elevation={5}>

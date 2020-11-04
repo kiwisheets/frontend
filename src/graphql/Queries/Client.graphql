@@ -1,0 +1,11 @@
+query CLIENT($id: ID!) {
+  client(id: $id) {
+    id
+    name
+    website
+    vatNumber
+    businessNumber
+    phone
+    createdAt
+  }
+}

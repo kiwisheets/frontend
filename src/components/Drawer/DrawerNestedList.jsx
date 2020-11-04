@@ -1,8 +1,5 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
+import React, { useContext } from 'react';
 import PropTypes from 'prop-types';
-import { useContext } from 'react';
 import {
   Collapse,
   IconButton,

@@ -1,13 +1,10 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
 import React from 'react';
 import {
   BrowserRouter, Route, Switch,
 } from 'react-router-dom';
 import Proptypes from 'prop-types';
 import ErrorBoundary from 'react-error-boundary';
-import { Fade, Container } from '@material-ui/core';
+import { Fade, Container, makeStyles } from '@material-ui/core';
 
 import * as colours from 'styles/colours';
 
@@ -20,22 +17,32 @@ const DashboardPage = React.lazy(() => import('pages/DashboardPage'));
 const ProfilePage = React.lazy(() => import('pages/Profile'));
 const FinancePage = React.lazy(() => import('pages/FinancePage'));
 
-const ErrorFallback = ({ error }) => (
-  <div role="alert" css={{ color: colours.danger, fontSize: '0.7em' }}>
-    <span>There was an error:</span>
-    {' '}
-    <pre
-      css={{
-        display: 'inline-block',
-        overflow: 'scroll',
-        margin: '0',
-        marginBottom: -5,
-      }}
-    >
-      {error.message}
-    </pre>
-  </div>
-);
+const useErrorFallbackStyles = makeStyles(() => ({
+  root: {
+    color: colours.danger, fontSize: '0.7em',
+  },
+  pre: {
+    display: 'inline-block',
+    overflow: 'scroll',
+    margin: '0',
+    marginBottom: -5,
+  },
+}));
+
+const ErrorFallback = ({ error }) => {
+  const classes = useErrorFallbackStyles();
+  return (
+    <div role="alert" className={classes.root}>
+      <span>There was an error:</span>
+      {' '}
+      <pre
+        className={classes.pre}
+      >
+        {error.message}
+      </pre>
+    </div>
+  );
+};
 
 ErrorFallback.propTypes = {
   error: Proptypes.shape({
@@ -54,9 +61,9 @@ const AuthenticatedApp = (props) => {
   return (
     <BrowserRouter>
       <Fade in>
-        <React.Fragment>
+        <>
           <AppNavigation onLogout={onLogout}>
-            <Container maxWidth="xl">
+            <Container maxWidth="xl" disableGutters>
               <React.Suspense fallback={<FullPanelSpinner />}>
                 <ErrorBoundary FallbackComponent={ErrorFallback}>
                   <Switch>
@@ -69,7 +76,7 @@ const AuthenticatedApp = (props) => {
               </React.Suspense>
             </Container>
           </AppNavigation>
-        </React.Fragment>
+        </>
       </Fade>
     </BrowserRouter>
   );

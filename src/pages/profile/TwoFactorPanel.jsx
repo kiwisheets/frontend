@@ -1,6 +1,3 @@
-/** @jsx jsx */
-/** @jsxFrag React.Fragment */
-import { jsx } from '@emotion/core';
 import React, { useMemo, useState } from 'react';
 import PropTypes from 'prop-types';
 import {
@@ -67,7 +64,7 @@ const TwoFactorPanel = (props) => {
     loading: twoFactorLoading,
     refetch: twoFactorRefetch,
   } = useQuery(TWO_FACTOR_ENABLED, {
-    fetchPolicy: 'network-only',
+    // fetchPolicy: 'network-only',
   });
 
   const [enableTwoFactor, {
@@ -159,7 +156,7 @@ const TwoFactorPanel = (props) => {
             <div className={classes.buttonWrapper}>
               <Button
                 color="primary"
-                size="small"
+                size="medium"
                 disabled={disableTwoFactorLoading}
                 onClick={handleDisable}
               >
@@ -174,7 +171,7 @@ const TwoFactorPanel = (props) => {
     );
   }
   return (
-    <React.Fragment>
+    <>
       <AccordionDetails>
         <Fade in>
           <Grid container>
@@ -252,7 +249,7 @@ const TwoFactorPanel = (props) => {
           <div className={classes.buttonWrapper}>
             <Button
               color="primary"
-              size="small"
+              size="medium"
               disabled={enableTwoFactorLoading}
               onClick={handleSave}
             >
@@ -263,7 +260,7 @@ const TwoFactorPanel = (props) => {
           </div>
         </Fade>
       </AccordionActions>
-    </React.Fragment>
+    </>
   );
 };
 
