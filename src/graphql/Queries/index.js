@@ -11,10 +11,13 @@ export { default as COMPANY_NAME } from './CompanyName.graphql';
 export * from './CompanyName.graphql';
 
 export { default as TWO_FACTOR_ENABLED } from './TwoFactorEnabled.graphql';
-export * from './CompanyName.graphql';
+export * from './TwoFactorEnabled.graphql';
 
 export { default as CLIENT } from './Client.graphql';
-export * from './CompanyName.graphql';
+export * from './Client.graphql';
+
+export { default as CLIENT_COUNT } from './ClientCount.graphql';
+export * from './ClientCount.graphql';
 
 export { default as CLIENTS_LIST } from './ClientsList.graphql';
-export * from './CompanyName.graphql';
+export * from './ClientsList.graphql';

@@ -143,3 +143,5 @@ sketch
 # .tfstate files
 *.tfstate
 *.tfstate.*
+
+.vercel

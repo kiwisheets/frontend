@@ -192,11 +192,6 @@ const CreateClient = () => {
                   Back
                 </Button>
               </div>
-              {/* <div className={classes.actionButtonWrapper}>
-                  <Button size="medium" color="primary" type="submit">
-                    Submit
-                  </Button>
-                </div> */}
               <FormSubmitButton
                 context={FormContext}
               >

@@ -1,32 +1,20 @@
-import React from 'react';
-import PropTypes from 'prop-types';
-import { Link as RouterLink } from 'react-router-dom';
+import React, { useState, useRef, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
 import {
   Checkbox,
   Fade,
-  IconButton,
-  lighten,
-  Link,
-  makeStyles,
   Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TablePagination,
   TableRow,
-  TableSortLabel,
-  Toolbar,
-  Tooltip,
-  Typography,
 } from '@material-ui/core';
-import DeleteIcon from '@material-ui/icons/Delete';
-import AddIcon from '@material-ui/icons/Add';
-import clsx from 'clsx';
 import { useQuery } from '@apollo/client';
-import { CLIENTS_LIST } from 'graphql/Queries';
+import { CLIENTS_LIST, CLIENT_COUNT } from 'graphql/Queries';
 import { FullPanelSpinner } from 'components/lib';
+import { EnhancedTableHead, TableToolbar } from 'components/Table';
 
 const descendingComparator = (a, b, orderBy) => {
   if (b[orderBy] < a[orderBy]) {
@@ -54,169 +42,37 @@ const stableSort = (array, comparator) => {
   return stabilizedThis.map((el) => el[0]);
 };
 
-const useToolbarStyles = makeStyles((theme) => ({
-  root: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(1),
-  },
-  highlight:
-    theme.palette.type === 'light'
-      ? {
-        color: theme.palette.secondary.main,
-        backgroundColor: lighten(theme.palette.secondary.light, 0.85),
-      }
-      : {
-        color: theme.palette.text.primary,
-        backgroundColor: theme.palette.secondary.dark,
-      },
-  title: {
-    flex: '1 1 100%',
-  },
-}));
-
-const TableToolbar = (props) => {
-  const classes = useToolbarStyles();
-  const { numSelected, title } = props;
-
-  return (
-    <Toolbar
-      className={clsx(classes.root, {
-        [classes.highlight]: numSelected > 0,
-      })}
-    >
-      {numSelected > 0 ? (
-        <Typography className={classes.title} color="inherit" variant="subtitle1" component="div">
-          {numSelected}
-          {' '}
-          selected
-        </Typography>
-      ) : (
-        <Typography className={classes.title} variant="h5" id="tableTitle" component="div">
-          {title}
-        </Typography>
-      )}
-
-      {numSelected > 0 ? (
-        <Tooltip title="Delete">
-          <IconButton aria-label="delete">
-            <DeleteIcon />
-          </IconButton>
-        </Tooltip>
-      ) : (
-        <>
-          {/* <Tooltip title="Filter list">
-            <IconButton aria-label="filter list">
-              <FilterListIcon />
-            </IconButton>
-          </Tooltip> */}
-
-          <Link component={RouterLink} to="clients/create">
-            <Tooltip title="Create new">
-              <IconButton aria-label="create new">
-                <AddIcon />
-              </IconButton>
-            </Tooltip>
-          </Link>
-        </>
-      )}
-    </Toolbar>
-  );
-};
-
-TableToolbar.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  title: PropTypes.string.isRequired,
-};
-
-const headCells = [
+const tableHead = [
   // {
   //   id: 'id', numeric: false, disablePadding: false, label: 'ID',
   // },
   {
     id: 'name', numeric: false, disablePadding: true, label: 'Name',
   },
+  {
+    id: 'name2', numeric: false, disablePadding: false, label: 'Name',
+  },
+  {
+    id: 'actions', numeric: false, disablePadding: false, label: 'Actions',
+  },
 ];
 
-const useTableHeadStyles = makeStyles(() => ({
-  visuallyHidden: {
-    border: 0,
-    clip: 'rect(0 0 0 0)',
-    height: 1,
-    margin: -1,
-    overflow: 'hidden',
-    padding: 0,
-    position: 'absolute',
-    top: 20,
-    width: 1,
-  },
-}));
-
-const EnhancedTableHead = (props) => {
-  const {
-    onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort,
-  } = props;
-  const classes = useTableHeadStyles();
-
-  const createSortHandler = (property) => (event) => {
-    onRequestSort(event, property);
-  };
-
-  return (
-    <TableHead>
-      <TableRow>
-        <TableCell padding="checkbox">
-          <Checkbox
-            indeterminate={numSelected > 0 && numSelected < rowCount}
-            checked={rowCount > 0 && numSelected === rowCount}
-            onChange={onSelectAllClick}
-            inputProps={{ 'aria-label': 'select all desserts' }}
-          />
-        </TableCell>
-        {headCells.map((headCell) => (
-          <TableCell
-            key={headCell.id}
-            align={headCell.numeric ? 'right' : 'left'}
-            padding={headCell.disablePadding ? 'none' : 'default'}
-            sortDirection={orderBy === headCell.id ? order : false}
-          >
-            <TableSortLabel
-              active={orderBy === headCell.id}
-              direction={orderBy === headCell.id ? order : 'asc'}
-              onClick={createSortHandler(headCell.id)}
-            >
-              {headCell.label}
-              {orderBy === headCell.id ? (
-                <span className={classes.visuallyHidden}>
-                  {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-                </span>
-              ) : null}
-            </TableSortLabel>
-          </TableCell>
-        ))}
-      </TableRow>
-    </TableHead>
-  );
-};
-
-EnhancedTableHead.propTypes = {
-  numSelected: PropTypes.number.isRequired,
-  onRequestSort: PropTypes.func.isRequired,
-  onSelectAllClick: PropTypes.func.isRequired,
-  order: PropTypes.oneOf(['asc', 'desc']).isRequired,
-  orderBy: PropTypes.string.isRequired,
-  rowCount: PropTypes.number.isRequired,
-};
-
 const ClientsDashboard = () => {
-  const [order, setOrder] = React.useState('asc');
-  const [orderBy, setOrderBy] = React.useState('name');
-  const [selected, setSelected] = React.useState([]);
-  const [page, setPage] = React.useState(0);
-  const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  const [order, setOrder] = useState('asc');
+  const [orderBy, setOrderBy] = useState('name');
+  const [selected, setSelected] = useState([]);
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
 
-  const { loading, data } = useQuery(CLIENTS_LIST, {
+  const highestPage = useRef(0);
+
+  const history = useHistory();
+
+  const { loading: countLoading, data: count } = useQuery(CLIENT_COUNT);
+
+  const { loading, data, fetchMore } = useQuery(CLIENTS_LIST, {
     variables: {
-      page,
+      page: 0,
     },
     fetchPolicy: 'network-only',
   });
@@ -267,6 +123,21 @@ const ClientsDashboard = () => {
     setPage(newPage);
   };
 
+  useEffect(() => {
+    if (page > highestPage.current) {
+      fetchMore({
+        variables: {
+          page,
+        },
+        updateQuery: (prev, { fetchMoreResult }) => {
+          if (!fetchMoreResult) return prev;
+          return { ...prev, clients: [...prev.clients, ...fetchMoreResult.clients] };
+        },
+      });
+      highestPage.current = page;
+    }
+  }, [page, fetchMore]);
+
   const isSelected = (name) => selected.indexOf(name) !== -1;
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, rows.length - page * rowsPerPage);
@@ -286,6 +157,7 @@ const ClientsDashboard = () => {
               onSelectAllClick={handleSelectAllClick}
               onRequestSort={handleRequestSort}
               rowCount={rows.length}
+              headCells={tableHead}
             />
             <TableBody>
               {stableSort(rows, getComparator(order, orderBy))
@@ -295,47 +167,30 @@ const ClientsDashboard = () => {
                   const labelId = `table-checkbox-${index}`;
 
                   return (
-                    <Link
-                      component={TableRow}
-                      to={`client/${row.id}`}
+                    <TableRow
                       key={row.id}
                       selected={isItemSelected}
                       tabIndex={-1}
                       hover
+                      onClick={() => history.push(`client/${row.id}`)}
+                      style={{ cursor: 'pointer' }}
                     >
-                      {/* <TableRow
-                          hover
-                          tabIndex={-1}
-                          key={row.id}
-                          selected={isItemSelected}
-                        > */}
                       <TableCell padding="checkbox">
                         <Checkbox
                           checked={isItemSelected}
                           onClick={(event) => handleSelect(event, row.id)}
                         />
                       </TableCell>
-                      {/*
-                        <TableCell component="th" id={labelId} scope="row" padding="none">
-                          <Link
-                            key={row.id}
-                            to={`client/${row.id}`}
-                            component={RouterLink}
-                          >
-                            {row.id}
-                          </Link>
-                        </TableCell> */}
                       <TableCell id={labelId} scope="row">
-                        <Link
-                          key={row.id}
-                          to={`client/${row.id}`}
-                          component={RouterLink}
-                        >
-                          {row.name}
-                        </Link>
+                        {row.name}
                       </TableCell>
-                      {/* </TableRow> */}
-                    </Link>
+                      <TableCell>
+                        {row.name}
+                      </TableCell>
+                      <TableCell>
+                        Actions
+                      </TableCell>
+                    </TableRow>
                   );
                 })}
               {emptyRows > 0 && (
@@ -351,10 +206,16 @@ const ClientsDashboard = () => {
         <TablePagination
           rowsPerPageOptions={[20]}
           component="div"
-          count={rows.length}
+          count={(() => {
+            if (count) {
+              return count.clientCount;
+            }
+            return 0;
+          })()}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
+          on
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>

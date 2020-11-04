@@ -1,23 +1,7 @@
 mutation CREATECLIENT(
-    # $name: String!
-    # $website: String
-    # $gstNumber: String
-    # $businessNumber: String
-    # $phoneNumber: String
-    # $billingAddress: CreateAddressInput
-    # $shippingAddress: CreateAddressInput
     $client: CreateClientInput!
   ) {
   createClient(client: $client
-  # {
-  #   name: $name
-  #   website: $website
-  #   vatNumber: $gstNumber
-  #   businessNumber: $businessNumber
-  #   phone: $phoneNumber
-  #   billingAddress: $billingAddress
-  #   shippingAddress: $shippingAddress
-  # }
   ) {
     id
   }
