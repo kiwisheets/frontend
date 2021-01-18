@@ -1,8 +1,9 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, Link as RouterLink } from 'react-router-dom';
 import {
   Checkbox,
   Fade,
+  Link,
   Paper,
   Table,
   TableBody,
@@ -10,6 +11,7 @@ import {
   TableContainer,
   TablePagination,
   TableRow,
+  Tooltip,
 } from '@material-ui/core';
 import { useQuery } from '@apollo/client';
 import { CLIENTS_LIST, CLIENT_COUNT } from 'graphql/Queries';
@@ -172,8 +174,8 @@ const ClientsDashboard = () => {
                       selected={isItemSelected}
                       tabIndex={-1}
                       hover
-                      onClick={() => history.push(`client/${row.id}`)}
-                      style={{ cursor: 'pointer' }}
+                      // onClick={() => history.push(`client/${row.id}`)}
+                      // style={{ cursor: 'pointer' }}
                     >
                       <TableCell padding="checkbox">
                         <Checkbox
@@ -182,7 +184,13 @@ const ClientsDashboard = () => {
                         />
                       </TableCell>
                       <TableCell id={labelId} scope="row">
-                        {row.name}
+                        <Link component={RouterLink} to={`client/${row.id}`}>
+                          <Tooltip title="Test">
+                            <>
+                              {row.name}
+                            </>
+                          </Tooltip>
+                        </Link>
                       </TableCell>
                       <TableCell>
                         {row.name}
@@ -193,13 +201,13 @@ const ClientsDashboard = () => {
                     </TableRow>
                   );
                 })}
-              {emptyRows > 0 && (
+              {/* {emptyRows > 0 && (
               <TableRow style={{ height: (53) * emptyRows }}>
                 <TableCell colSpan={6}>
                   { loading && <FullPanelSpinner />}
                 </TableCell>
               </TableRow>
-              )}
+              )} */}
             </TableBody>
           </Table>
         </TableContainer>

@@ -21,3 +21,6 @@ export * from './ClientCount.graphql';
 
 export { default as CLIENTS_LIST } from './ClientsList.graphql';
 export * from './ClientsList.graphql';
+
+export { default as PREVIEW_INVOICE } from './PreviewInvoice.graphql';
+export * from './PreviewInvoice.graphql';
