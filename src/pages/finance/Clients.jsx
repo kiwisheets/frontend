@@ -223,7 +223,6 @@ const ClientsDashboard = () => {
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
-          on
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
